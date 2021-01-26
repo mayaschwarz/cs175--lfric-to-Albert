@@ -1,0 +1,6 @@
+# python files
+__pycache__/
+
+# sublime text configuration files
+*.sublime-project
+*.sublime-workspace
