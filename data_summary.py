@@ -1,7 +1,6 @@
 # Standard libraries
 import csv
 from pathlib import Path
-from collections import defaultdict
 
 # Additional libraries (pip install ...)
 import texttable
@@ -23,6 +22,7 @@ TEXT_KEY = 't'
 TESTAMENT_KEY = 't'
 GENRE_KEY = 'g'
 NAME_KEY = 'n'
+DATASET_KEY = 'dataset'
 
 # Other constants
 TESTAMENT_NAMES = { 'OT': 'Old Testament', 'NT': 'New Testament' }
@@ -89,46 +89,50 @@ def get_bible_book_genres() -> {int: str}:
         return { int(genre[genre_index]): genre[name_index] for genre in reader }
 
 def get_bible_books() -> {int: dict}:
-    """
-    Returns a dictionary where each key is the bible book id,
-    and each value is that book's details (uses key_english.csv)
+	"""
+	Returns a dictionary where each key is the bible book id,
+	and each value is that book's details (uses key_english.csv)
 
-    Returns:
-        {
-            1: {
-                'name': 'Genesis',
-                'testament': 'OT', (old testament)
-                'genre_id': 1,
-                'genre': 'Law'
-            },
-            2: {
-                'name': 'Exodus',
-                'testament': 'OT',
-                'genre_id': 1,
-                'genre': 'Law'
-            },
-            ...
-        }
-    """
-    genres = get_bible_book_genres()
+	Returns:
+		{
+			1: {
+				'name': 'Genesis',
+				'testament': 'OT', (old testament)
+				'genre_id': 1,
+				'genre': 'Law',
+				'dataset': 'test'
+			},
+			2: {
+				'name': 'Exodus',
+				'testament': 'OT',
+				'genre_id': 1,
+				'genre': 'Law',
+				'dataset': 'train'
+			},
+			...
+		}
+	"""
+	genres = get_bible_book_genres()
 
-    with open(KEY_ENGLISH_PATH, 'r') as csvfile:
-        reader = csv.reader(csvfile)
-        headers = next(reader)
+	with open(KEY_ENGLISH_PATH, 'r') as csvfile:
+		reader = csv.reader(csvfile)
+		headers = next(reader)
 
-        book_index = headers.index(BOOK_KEY)
-        name_index = headers.index(NAME_KEY)
-        testament_index = headers.index(TESTAMENT_KEY)
-        genre_index = headers.index(GENRE_KEY)
+		book_index = headers.index(BOOK_KEY)
+		name_index = headers.index(NAME_KEY)
+		testament_index = headers.index(TESTAMENT_KEY)
+		genre_index = headers.index(GENRE_KEY)
+		dataset_index = headers.index(DATASET_KEY)
 
-        return {
-            int(book[book_index]): {
-                'name': book[name_index],
-                'testament': book[testament_index],
-                'genre_id': int(book[genre_index]),
-                'genre': genres[int(book[genre_index])]
-            } for book in reader
-        }
+		return {
+			int(book[book_index]): {
+				'name': book[name_index],
+				'testament': book[testament_index],
+				'genre_id': int(book[genre_index]),
+				'genre': genres[int(book[genre_index])],
+				'dataset': book[dataset_index]
+			} for book in reader
+		}
 
 def get_books_contained_by_version(bible_version: dict) -> [int]:
     """
@@ -205,36 +209,53 @@ def _print_version_table():
     )
 
 def _print_genre_table():
-    genres = get_bible_book_genres()
-    book_genres = [book['genre_id'] for book in get_bible_books().values()]
+	genres = get_bible_book_genres()
+	books = get_bible_books().values()
+	datasets = sorted({book['dataset'] for book in books})
 
-    rows = [(
-        genre_id,
-        genre,
-        book_genres.count(genre_id)
-    ) for (genre_id, genre) in sorted(genres.items())]
+	rows = [
+		[
+			genre_id,
+			genre,
+			len(list(filter(lambda book: book['genre_id'] == genre_id, books)))
+		]
+		+
+		[
+			len(list(filter(lambda book: book['genre_id'] == genre_id and book['dataset'] == dataset, books)))
+			for dataset in datasets
+		] for (genre_id, genre) in sorted(genres.items())
+	]
 
-    _print_table(
-        title = "Bible Genre Table",
-        headers = ['id', 'name', '# books'],
-        rows = rows
-    )
+
+	_print_table(
+		title = "Bible Genre Table",
+		headers = ['id', 'name', 'total # books'] + [f'# {dataset} books' for dataset in datasets],
+		rows = rows
+	)
 
 def _print_testament_table():
-    books = get_bible_books()
-    testament_labels = [book['testament'] for book in books.values()]
+	books = get_bible_books().values()
+	datasets = sorted({book['dataset'] for book in books})
+	testament_labels = [book['testament'] for book in books]
 
-    rows = [(
-        testament_label,
-        TESTAMENT_NAMES[testament_label],
-        testament_labels.count(testament_label)
-    ) for testament_label in sorted(set(testament_labels))]
+	rows = [
+		[
+			testament_label,
+			TESTAMENT_NAMES[testament_label],
+			len(list(filter(lambda book: book['testament'] == testament_label, books)))
+		]
+		+
+		[
+			len(list(filter(lambda book: book['testament'] == testament_label and book['dataset'] == dataset, books)))
+			for dataset in datasets
+		] for testament_label in sorted(set(testament_labels))
+	]
 
-    _print_table(
-        title = "Bible Testament Table",
-        headers = ['label', 'name', '# books'],
-        rows = rows
-    )
+	_print_table(
+		title = "Bible Testament Table",
+		headers = ['label', 'name', 'total # books'] + [f'# {dataset} books' for dataset in datasets],
+		rows = rows
+	)
 
 def _print_summary_tables():
     _print_version_table()
