@@ -147,7 +147,7 @@ def get_books_contained_by_version(bible_version: dict) -> [int]:
 	"""
 	table_path = TABLE_DIRECTORY / TABLE_NAME_FORMAT.format(table = bible_version['table'])
 
-	with open(table_path, 'r', encoding='latin-1') as csvfile:
+	with open(table_path, 'r') as csvfile:
 		reader = csv.reader(csvfile)
 
 		headers = next(reader)
@@ -195,7 +195,7 @@ def _print_version_table():
 		version['id'],
 		version['abbreviation'],
 		version['version'],
-		'contains all books' if len(missing_books[version['id']]) == 0 else ', '.join(missing_books[version['id']])
+		'contains all books' if len(missing_books[version['id']]) == 0 else ', '.join((str(book_id) for book_id in missing_books[version['id']]))
 	) for version in bible_versions]
 
 	_print_table(
