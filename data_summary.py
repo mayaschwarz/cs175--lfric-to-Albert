@@ -1,7 +1,6 @@
 # Standard libraries
 import csv
 from pathlib import Path
-from collections import defaultdict
 
 # Additional libraries (pip install ...)
 import texttable
@@ -206,17 +205,19 @@ def _print_version_table():
 
 def _print_genre_table():
 	genres = get_bible_book_genres()
-	book_genres = [book['genre_id'] for book in get_bible_books().values()]
+	book_genres = [(book['genre_id'], book['testament']) for book in get_bible_books().values()]
+	testament_labels = sorted({book_genre[1] for book_genre in book_genres })
 
 	rows = [(
 		genre_id,
 		genre,
-		book_genres.count(genre_id)
-	) for (genre_id, genre) in sorted(genres.items())]
+		TESTAMENT_NAMES[testament_label],
+		book_genres.count((genre_id, testament_label))
+	) for (genre_id, genre) in sorted(genres.items()) for testament_label in testament_labels if book_genres.count((genre_id, testament_label)) != 0]
 
 	_print_table(
-		title = "Bible Genre Table",
-		headers = ['id', 'name', '# books'],
+		title = f"Bible Genre Table",
+		headers = ['id', 'name', 'testament', '# books'],
 		rows = rows
 	)
 
