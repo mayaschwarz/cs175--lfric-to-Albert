@@ -18,6 +18,19 @@ TESTAMENT_KEY = 't'
 GENRE_KEY = 'g'
 NAME_KEY = 'n'
 
+def make_tarball(output_filename: Path, source_dir: Path) -> None:
+    """
+    Generates a tarball (tar.gz) of a source directory at the location "output_filename"
+
+    Arguments:
+        output_filename {Path} -- filepath of tarball (should include file extension)
+        source_dir {Path} -- directory that comprises the tarball
+
+    Returns:
+        None
+    """
+    with tarfile.open(output_filename, "w:gz") as tar:
+        tar.add(source_dir, arcname=os.path.basename(source_dir))
 
 def get_bible_books_id() -> {str: int}:
     """
