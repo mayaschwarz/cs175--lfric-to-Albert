@@ -4,3 +4,6 @@ __pycache__/
 # sublime text configuration files
 *.sublime-project
 *.sublime-workspace
+
+# training/validation/test split datasets
+data/split/
