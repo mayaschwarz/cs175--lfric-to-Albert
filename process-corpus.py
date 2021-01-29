@@ -12,8 +12,6 @@ import pandas as pd
 # Local Libraries
 from util import *
 
-WEBSITE = "http://wesley.nnu.edu/fileadmin/imported_site/biblical_studies/wycliffe/"
-
 # Paths
 PROJECT_DIRECTORY = Path(__file__).parent
 DATA_PATH = PROJECT_DIRECTORY / "data"
