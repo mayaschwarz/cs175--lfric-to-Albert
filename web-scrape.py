@@ -223,8 +223,8 @@ def _collect_raw_corpus():
     _collect_bible_study("/WestSaxon1175", WS_GOSPEL_PATH)
 
     # store raw-texts as tarfiles
-    _make_tarball(DATA_PATH / 'helsinki-raw.tar.gz', HELSINKI_PATH)
-    _make_tarball(DATA_PATH / 'me-prose-raw.tar.gz', ME_PROSE_VERSE_PATH)
+    make_tarball(DATA_PATH / 'helsinki-raw.tar.gz', HELSINKI_PATH)
+    make_tarball(DATA_PATH / 'me-prose-raw.tar.gz', ME_PROSE_VERSE_PATH)
 
 
 if __name__ == '__main__':
