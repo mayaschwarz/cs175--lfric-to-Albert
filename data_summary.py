@@ -209,53 +209,36 @@ def _print_version_table():
     )
 
 def _print_genre_table():
-	genres = get_bible_book_genres()
-	books = get_bible_books().values()
-	datasets = sorted({book['dataset'] for book in books})
+    genres = get_bible_book_genres()
+    book_genres = [book['genre_id'] for book in get_bible_books().values()]
 
-	rows = [
-		[
-			genre_id,
-			genre,
-			len(list(filter(lambda book: book['genre_id'] == genre_id, books)))
-		]
-		+
-		[
-			len(list(filter(lambda book: book['genre_id'] == genre_id and book['dataset'] == dataset, books)))
-			for dataset in datasets
-		] for (genre_id, genre) in sorted(genres.items())
-	]
+    rows = [(
+        genre_id,
+        genre,
+        book_genres.count(genre_id)
+    ) for (genre_id, genre) in sorted(genres.items())]
 
-
-	_print_table(
-		title = "Bible Genre Table",
-		headers = ['id', 'name', 'total # books'] + [f'# {dataset} books' for dataset in datasets],
-		rows = rows
-	)
+    _print_table(
+        title = "Bible Genre Table",
+        headers = ['id', 'name', '# books'],
+        rows = rows
+    )
 
 def _print_testament_table():
-	books = get_bible_books().values()
-	datasets = sorted({book['dataset'] for book in books})
-	testament_labels = [book['testament'] for book in books]
+    books = get_bible_books()
+    testament_labels = [book['testament'] for book in books.values()]
 
-	rows = [
-		[
-			testament_label,
-			TESTAMENT_NAMES[testament_label],
-			len(list(filter(lambda book: book['testament'] == testament_label, books)))
-		]
-		+
-		[
-			len(list(filter(lambda book: book['testament'] == testament_label and book['dataset'] == dataset, books)))
-			for dataset in datasets
-		] for testament_label in sorted(set(testament_labels))
-	]
+    rows = [(
+        testament_label,
+        TESTAMENT_NAMES[testament_label],
+        testament_labels.count(testament_label)
+    ) for testament_label in sorted(set(testament_labels))]
 
-	_print_table(
-		title = "Bible Testament Table",
-		headers = ['label', 'name', 'total # books'] + [f'# {dataset} books' for dataset in datasets],
-		rows = rows
-	)
+    _print_table(
+        title = "Bible Testament Table",
+        headers = ['label', 'name', '# books'],
+        rows = rows
+    )
 
 def _print_summary_tables():
     _print_version_table()
