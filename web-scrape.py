@@ -27,20 +27,6 @@ HELSINKI_CORPUS = "https://helsinkicorpus.arts.gla.ac.uk"
 ME_PROSE_VERSE = "https://quod.lib.umich.edu"
 STUDY_BIBLE = "https://studybible.info"
 
-def _make_tarball(output_filename: Path, source_dir: Path) -> None:
-    """
-    Generates a tarball (tar.gz) of a source directory at the location "output_filename"
-
-    Arguments:
-        output_filename {Path} -- filepath of tarball (should include file extension)
-        source_dir {Path} -- directory that comprises the tarball
-
-    Returns:
-        None
-    """
-    with tarfile.open(output_filename, "w:gz") as tar:
-        tar.add(source_dir, arcname=os.path.basename(source_dir))
-
 
 def _beautify(url: str, parser="html.parser", session=None) -> BeautifulSoup or None:
     """
@@ -101,7 +87,7 @@ def _collect_helsinki() -> None:
     Collects RAW XML from Helsinki Corpus and stores in directory 'data/helsinki-raw'
 
     Returns:
-        void
+        None
     """
     # create directory for raw data
     if not os.path.exists(HELSINKI_PATH):
@@ -141,7 +127,7 @@ def _collect_me_prose() -> None:
     Collects texts from Middle English Corpus and stores as txt files in 'data/me-prose-raw'
 
     Returns:
-        void
+        None
     """
     # create directory for raw data
     if not os.path.exists(ME_PROSE_VERSE_PATH):
@@ -181,7 +167,7 @@ def _collect_bible_study(url_path: str, csv_file: Path) -> None:
         csv_file {Path} -- destination csv
 
     Returns:
-        void
+        None
     """
     # Set up a session
     session = requests.Session()
