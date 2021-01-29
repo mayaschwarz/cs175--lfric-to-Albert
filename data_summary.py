@@ -1,7 +1,6 @@
 # Standard libraries
 import csv
 from pathlib import Path
-from collections import defaultdict
 
 # Additional libraries (pip install ...)
 import texttable
@@ -23,6 +22,7 @@ TEXT_KEY = 't'
 TESTAMENT_KEY = 't'
 GENRE_KEY = 'g'
 NAME_KEY = 'n'
+DATASET_KEY = 'dataset'
 
 # Other constants
 TESTAMENT_NAMES = { 'OT': 'Old Testament', 'NT': 'New Testament' }
@@ -99,13 +99,15 @@ def get_bible_books() -> {int: dict}:
                 'name': 'Genesis',
                 'testament': 'OT', (old testament)
                 'genre_id': 1,
-                'genre': 'Law'
+                'genre': 'Law',
+                'dataset': 'test'
             },
             2: {
                 'name': 'Exodus',
                 'testament': 'OT',
                 'genre_id': 1,
-                'genre': 'Law'
+                'genre': 'Law',
+                'dataset': 'train'
             },
             ...
         }
@@ -120,13 +122,15 @@ def get_bible_books() -> {int: dict}:
         name_index = headers.index(NAME_KEY)
         testament_index = headers.index(TESTAMENT_KEY)
         genre_index = headers.index(GENRE_KEY)
+        dataset_index = headers.index(DATASET_KEY)
 
         return {
             int(book[book_index]): {
                 'name': book[name_index],
                 'testament': book[testament_index],
                 'genre_id': int(book[genre_index]),
-                'genre': genres[int(book[genre_index])]
+                'genre': genres[int(book[genre_index])],
+                'dataset': book[dataset_index]
             } for book in reader
         }
 
@@ -171,7 +175,7 @@ def get_versions_missing_books(bible_versions: [dict]) -> {int: [int]}:
 
     return { version['id']: sorted(all_books - set(get_books_contained_by_version(version))) for version in bible_versions }
 
-def _print_table(title: str, headers: [str], rows: [int or str]):
+def _print_table(title: str, headers: [str], rows: [int or str], align: [str] or None = None):
     """
     Helper function to print an ASCII table
 
@@ -179,10 +183,14 @@ def _print_table(title: str, headers: [str], rows: [int or str]):
         title {str} -- table title
         headers {[str]} -- list of table headers
         rows {[int or str]} -- list of table rows
+
+    Keyword Arguments:
+        align: {[str] or None} -- how to align the columns (default: {None})
     """
     table = texttable.Texttable()
     table.header(headers)
     table.add_rows(rows, header = False)
+    align and table.set_cols_align(align)
 
     print(title)
     print(table.draw())
@@ -236,12 +244,54 @@ def _print_testament_table():
         rows = rows
     )
 
+def _get_genre_dataset_split(genre_id: int, dataset: str) -> int:
+    return len(list(filter(lambda book: book['genre_id'] == genre_id and book['dataset'] == dataset, get_bible_books().values())))
+
+def _print_genre_data_split_table():
+    genres = get_bible_book_genres()
+
+    rows = [(
+        genre,
+        f"{_get_genre_dataset_split(genre_id, 'train')} / {_get_genre_dataset_split(genre_id, 'test')}"
+    ) for (genre_id, genre) in sorted(genres.items())]
+
+    _print_table(
+        title = "Bible Genre Data Split Table",
+        headers = ['genre', 'train / test split'],
+        rows = rows,
+        align = ['l', 'c']
+    )
+
+def _get_testament_dataset_split(testament: str, dataset: str) -> int:
+    return len(list(filter(lambda book: book['testament'] == testament and book['dataset'] == dataset, get_bible_books().values())))
+
+def _print_testament_data_split_table():
+    books = get_bible_books()
+    testament_labels = [book['testament'] for book in books.values()]
+
+    rows = [(
+        TESTAMENT_NAMES[testament_label],
+        f"{_get_testament_dataset_split(testament_label, 'train')} / {_get_testament_dataset_split(testament_label, 'test')}"
+    ) for testament_label in sorted(set(testament_labels))]
+
+    _print_table(
+        title = "Bible Testament Data Split Table",
+        headers = ['testament', 'train / test split'],
+        rows = rows,
+        align = ['l', 'c']
+    )
+
 def _print_summary_tables():
     _print_version_table()
     print()
     _print_genre_table()
     print()
     _print_testament_table()
+    print()
+    _print_genre_data_split_table()
+    print()
+    _print_testament_data_split_table()
+    print()
 
 if __name__ == '__main__':
     _print_summary_tables()
