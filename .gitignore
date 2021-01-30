@@ -7,3 +7,6 @@ __pycache__/
 
 # training/validation/test split datasets
 data/split/
+
+# raw scraped data
+data/raw/

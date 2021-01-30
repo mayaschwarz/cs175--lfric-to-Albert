@@ -1,5 +1,5 @@
-from data_manager import get_bible_versions, get_versions_missing_books, get_bible_book_genres, get_bible_books
-from data_manager import TESTAMENT_NAMES
+from src.data_manager import get_bible_versions, get_versions_missing_books, get_bible_book_genres, get_bible_books
+from src.data_manager import TESTAMENT_NAMES
 
 # Additional libraries (pip install ...)
 import texttable
