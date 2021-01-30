@@ -1,8 +1,6 @@
 # CS 175 Ælfric to Albert
 
 ## Dependencies
-- `texttable`
-
 ```bash
-pip install texttable
+pip install texttable bs4
 ```
