@@ -1,0 +1,76 @@
+Genesis - gen.txt
+Exodus - exo.txt
+Leviticus - lev.txt
+Numbers - num.txt
+Deuteronomy - deu.txt
+Joshua - jos.txt
+Judges - jdg.txt
+Ruth - rut.txt
+1 Samuel - 1sa.txt
+2 Samuel - 2sa.txt
+1 Kings - 1ki.txt
+2 Kings - 2ki.txt
+1 Chronicles - 1ch.txt
+2 Chronicles - 2ch.txt
+Ezra - ezr.txt
+Nehemiah - neh.txt
+3 Esdras - 2ez.txt
+Tobit - tob.txt
+Judith - jdt.txt
+Esther - est.txt
+Job - job.txt
+Psalms - psa.txt
+Proverbs - pro.txt
+Ecclesiastes - ecc.txt
+Song of Solomon - sol.txt
+Wisdom - wis.txt
+Syrach - syr.txt
+Isaiah - isa.txt
+Jeremiah - jer.txt
+Lamentations - lam.txt
+Preier of Jeremye - epj.txt
+Baruk - bar.txt
+Ezekiel - eze.txt
+Daniel - dan.txt
+Hosea - hos.txt
+Joel - joe.txt
+Amos - amo.txt
+Obadiah - oba.txt
+Jonah - jon.txt
+Micah - mic.txt
+Nahum - nah.txt
+Habakkuk - hab.txt
+Zephaniah - zep.txt
+Haggai - hag.txt
+Zechariah - zec.txt
+Malachi - mal.txt
+1 Maccabees - 1ma.txt
+2 Maccabees - 2ma.txt
+Matthew - mat.txt
+Mark - mar.txt
+Luke - luk.txt
+John - joh.txt
+Acts - act.txt
+Romans - rom.txt
+1 Corinthians - 1co.txt
+2 Corinthians - 2co.txt
+Galatians - gal.txt
+Ephesians - eph.txt
+Philippians - phi.txt
+Colossians - col.txt
+1 Thessalonians - 1th.txt
+2 Thessalonians - 2th.txt
+1 Timothy - 1ti.txt
+2 Timothy - 2ti.txt
+Titus - tit.txt
+Philemon - phm.txt
+Hebrews - heb.txt
+James - jam.txt
+1 Peter - 1pe.txt
+2 Peter - 2pe.txt
+1 John - 1jo.txt
+2 John - 2jo.txt
+3 John - 3jo.txt
+Jude - jud.txt
+Revelation - rev.txt
+Laodicensis - lao.txt

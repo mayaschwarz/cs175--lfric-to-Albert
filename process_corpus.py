@@ -32,6 +32,7 @@ def parse_wycliffe():
                 chapter_id = 1
                 for line in book_fp:
                     line = line.strip()
+                    line = line.replace(r"\[.*\]", "")
                     if match := re.match(r'^(\d+) (.+)', line):
                         verse_id = int(match.group(1))
                         verse = match.group(2)
@@ -148,4 +149,4 @@ def parse_aelfric_ot() -> None:
 
 if __name__ == '__main__':
     parse_wycliffe()
-    parse_aelfric_ot()
+    # parse_aelfric_ot()
