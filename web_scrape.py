@@ -159,15 +159,15 @@ def _collect_bible_study(url_path: str, csv_file: Path) -> None:
 def _collect_raw_corpus():
     """ Retrieve corpora and individual texts """
     # collect the corpus
-    #_collect_helsinki()
-    #_collect_me_prose()
+    _collect_helsinki()
+    _collect_me_prose()
 
     # collect individual texts
     _collect_bible_study('/WestSaxon1175', WEST_SAXON_GOSPEL_CSV_PATH)
 
     # store raw-texts as tar files
-    #make_tarball(HELSINKI_RAW_TAR_PATH, HELSINKI_RAW_PATH)
-    #make_tarball(MIDDLE_ENGLISH_PROSE_VERSE_RAW_TAR_PATH, MIDDLE_ENGLISH_PROSE_VERSE_RAW_PATH)
+    make_tarball(HELSINKI_RAW_TAR_PATH, HELSINKI_RAW_PATH)
+    make_tarball(MIDDLE_ENGLISH_PROSE_VERSE_RAW_TAR_PATH, MIDDLE_ENGLISH_PROSE_VERSE_RAW_PATH)
 
 if __name__ == '__main__':
     _collect_raw_corpus()

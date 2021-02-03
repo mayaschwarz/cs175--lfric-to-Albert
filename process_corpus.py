@@ -101,53 +101,7 @@ def parse_aelfric_ot() -> None:
                     verse_id = int(cv[1])
                 i += 1
 
-# def old_eng_old_testament():
-#     id_ref = get_bible_book_id_map()
-#     with open(AELFRIC_OLD_TESTAMENT_XML_PATH, 'r') as old_test, open(AELFRIC_CSV_PATH, 'w') as file:
-#         contents = old_test.read()
-#         bs = BeautifulSoup(contents, 'lxml')
-#         text = bs.find('text')
-#         # Extract all the samples
-#         samples = text.find_all('div', attrs={'type': 'sample', 'n': re.compile('^sample[0-9]')})
-#         for s in samples:
-#             # get book number
-#             print(s['n'][len('sample'):])
-#             book_id = get_book_number(int(s['n'][len('sample'):]))
-
-#             # extract paragraph
-#             s = s.find('p')
-
-#             # remove unnecessary milestones
-#             for m in s.select('milestone'):
-#                 if m['type'] == 'scriptural':
-#                     m.decompose()
-
-#             for c in s.find_all(re.compile('(lb|choice|supplied|pb)')):
-#                 print(c.text)
-
-#             print(s.contents)
-#             raise
-#             paired = []
-#             running_str = ''
-#             milestone = s.contents[0]
-#             i = 1
-#             while i < len(s.contents):
-#                 if isinstance(s.contents[i], bs4.element.Tag):
-#                     paired.append((milestone, running_str))
-#                     running_str = ''
-#                     milestone = s.contents[i]
-#                 elif isinstance(s.contents[i], bs4.element.NavigableString):
-#                     running_str += str(s.contents[i]).strip()
-#                 i += 1
-
-#             for m, s in paired:
-#                 print(m)
-#                 c_v = float(m['n'])
-#                 chapter = int(c_v)
-#                 verse = int((c_v * 100) % 100)
-#                 file.write(f'{chapter}, {verse}, {s}')
-
 
 if __name__ == '__main__':
-    # parse_wycliffe()
+    parse_wycliffe()
     parse_aelfric_ot()
