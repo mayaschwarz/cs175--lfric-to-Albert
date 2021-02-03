@@ -235,7 +235,7 @@ def get_books_contained_by_version(bible_version: dict) -> [int]:
     """
     table_path = TABLE_DIRECTORY / TABLE_NAME_FORMAT.format(table = bible_version['table'])
 
-    with open(table_path, 'r') as csvfile:
+    with open(table_path, 'r', encoding='utf-8') as csvfile:
         reader = csv.reader(csvfile)
 
         headers = next(reader)

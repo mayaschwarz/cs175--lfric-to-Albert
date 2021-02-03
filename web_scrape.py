@@ -31,7 +31,7 @@ def _get_url_params(url: str) -> {str: [str]}:
 
 def _collect_helsinki() -> None:
     """
-    Collects RAW XML from Helsinki Corpus and stores in directory 'data/helsinki-raw'
+    Collects RAW XML from Helsinki Corpus and stores in directory 'data/raw/helsinki'
 
     Returns:
         None
@@ -69,7 +69,7 @@ def _collect_helsinki() -> None:
 
 def _collect_me_prose() -> None:
     """
-    Collects texts from Middle English Corpus and stores as txt files in 'data/me-prose-raw'
+    Collects texts from Middle English Corpus and stores as txt files in 'data/raw/middle_english_prose'
 
     Returns:
         None
@@ -153,7 +153,7 @@ def _collect_bible_study(url_path: str, csv_file: Path) -> None:
                     v = re.sub(r'\[.*\]', '', v).strip()
                     writer.writerow([f'%d%03d%03d' % (book_id, c_id, v_id), book_id, c_id, v_id, v])
                 # delay to not overload server with requests
-                time.sleep(10)
+                time.sleep(5)
 
 
 def _collect_raw_corpus():
