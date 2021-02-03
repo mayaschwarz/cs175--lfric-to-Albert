@@ -31,7 +31,7 @@ def _get_url_params(url: str) -> {str: [str]}:
 
 def _collect_helsinki() -> None:
     """
-    Collects RAW XML from Helsinki Corpus and stores in directory 'data/helsinki-raw'
+    Collects RAW XML from Helsinki Corpus and stores in directory 'data/raw/helsinki'
 
     Returns:
         None
@@ -69,7 +69,7 @@ def _collect_helsinki() -> None:
 
 def _collect_me_prose() -> None:
     """
-    Collects texts from Middle English Corpus and stores as txt files in 'data/me-prose-raw'
+    Collects texts from Middle English Corpus and stores as txt files in 'data/raw/middle_english_prose'
 
     Returns:
         None
@@ -153,21 +153,21 @@ def _collect_bible_study(url_path: str, csv_file: Path) -> None:
                     v = re.sub(r'\[.*\]', '', v).strip()
                     writer.writerow([f'%d%03d%03d' % (book_id, c_id, v_id), book_id, c_id, v_id, v])
                 # delay to not overload server with requests
-                time.sleep(10)
+                time.sleep(5)
 
 
 def _collect_raw_corpus():
     """ Retrieve corpora and individual texts """
     # collect the corpus
-    _collect_helsinki()
-    _collect_me_prose()
+    #_collect_helsinki()
+    #_collect_me_prose()
 
     # collect individual texts
     _collect_bible_study('/WestSaxon1175', WEST_SAXON_GOSPEL_CSV_PATH)
 
     # store raw-texts as tar files
-    make_tarball(HELSINKI_RAW_TAR_PATH, HELSINKI_RAW_PATH)
-    make_tarball(MIDDLE_ENGLISH_PROSE_VERSE_RAW_TAR_PATH, MIDDLE_ENGLISH_PROSE_VERSE_RAW_PATH)
+    #make_tarball(HELSINKI_RAW_TAR_PATH, HELSINKI_RAW_PATH)
+    #make_tarball(MIDDLE_ENGLISH_PROSE_VERSE_RAW_TAR_PATH, MIDDLE_ENGLISH_PROSE_VERSE_RAW_PATH)
 
 if __name__ == '__main__':
     _collect_raw_corpus()

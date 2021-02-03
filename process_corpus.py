@@ -48,7 +48,8 @@ def parse_wycliffe():
 
 def parse_aelfric_ot() -> None:
     id_ref = get_bible_book_id_map()
-    with open(AELFRIC_OLD_TESTAMENT_XML_PATH, 'r') as src, open(AELFRIC_CSV_PATH, 'w',  newline='', encoding='utf-8') as dest:
+    with open(AELFRIC_OLD_TESTAMENT_XML_PATH, 'r', encoding='utf-8') as src, \
+            open(AELFRIC_CSV_PATH, 'w',  newline='', encoding='utf-8') as dest:
         writer = csv.writer(dest)
         writer.writerow([ID_KEY, BOOK_KEY, CHAPTER_KEY, VERSE_KEY, TEXT_KEY])
         xml_doc = BeautifulSoup(src.read(), 'lxml')
@@ -148,5 +149,5 @@ def parse_aelfric_ot() -> None:
 
 
 if __name__ == '__main__':
-    parse_wycliffe()
-    # parse_aelfric_ot()
+    # parse_wycliffe()
+    parse_aelfric_ot()
