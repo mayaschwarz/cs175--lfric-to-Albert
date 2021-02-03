@@ -1,6 +1,9 @@
 # python files
 __pycache__/
 
+# IDE configuration files
+/.idea
+
 # sublime text configuration files
 *.sublime-project
 *.sublime-workspace
