@@ -104,4 +104,4 @@ def parse_aelfric_ot() -> None:
 
 if __name__ == '__main__':
     parse_wycliffe()
-    parse_aelfric_ot()
+    # parse_aelfric_ot()
