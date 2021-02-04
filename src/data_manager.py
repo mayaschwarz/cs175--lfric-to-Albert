@@ -57,6 +57,18 @@ def get_bible_versions() -> [dict]:
 
     return bible_versions
 
+def get_bible_versions_by_file_name(tables: [str]) -> [dict]:
+    """
+    Returns bible versions by table name (file name).
+
+    Arguments:
+        tables: {[str]} -- list of table (file) names
+
+    Returns:
+        Same as get_bible_versions
+    """
+    return list(filter(lambda book: book['table'] in tables, get_bible_versions()))
+
 def get_bible_book_genres() -> {int: str}:
     """
     Returns a dictionary where each key is the bible genre id,
