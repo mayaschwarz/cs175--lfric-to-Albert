@@ -13,3 +13,6 @@ data/split/
 
 # raw scraped data
 data/raw/
+
+# jupyter notebook
+.ipynb_checkpoints/
