@@ -5,6 +5,7 @@ from src.utils import time_function
 import csv
 from collections import defaultdict, namedtuple
 import random, shutil, re
+from typing import Callable
 
 # CSV header names
 BOOK_KEY = 'b'
@@ -413,7 +414,44 @@ def write_zipped_verses(zipped_verses: {str: {str: [str]}}):
             with open(path, 'w') as file:
                 file.write('\n'.join(verses))
 
-def create_datasets(bible_versions: [dict], training_fraction: float, shuffle: bool = True, write_files: bool = False, verbose: bool = True) -> {str: {str: [str]}}:
+def preprocess_filter_num_words(max_num_words: int, min_num_words: int = 1) -> Callable[[dict], dict]:
+    """
+    A preprocess function for create_datasets.
+    Filters verses where a bible version has too many or too few verses.
+    Words are split on whitespace.
+
+    Arguments:
+        max_num_words {int} -- maximum number of words per verse
+
+    Keyword Arguments:
+        min_num_words {int} -- minimum number of words per verse (default: {1})
+    """
+    return lambda shared_verses: dict(filter(lambda verse: all((min_num_words <= len(text.split()) <= max_num_words for text in verse[1])), shared_verses.items()))
+
+def preprocess_filter_num_sentences(max_num_sentences: int = 1, min_num_sentences: int = 1) -> Callable[[dict], dict]:
+    """
+    A preprocess function for create_datasets.
+    Filters verses where a bible version has too many or too few sentences.
+    Sentences are split on .!? followed by a character.
+
+    Keyword Arguments:
+        max_num_sentences {int} -- maximum number of sentences per verse (default: {1})
+        min_num_sentences {int} -- minimum number of sentences per verse (default: {1})
+    """
+    delim = re.compile(r'[.!?].')
+
+    return lambda shared_verses: dict(filter(lambda verse: all((min_num_sentences <= len(re.split(delim, text)) <= max_num_sentences for text in verse[1])), shared_verses.items()))
+
+def run_preprocess_operations(shared_verses: {VerseIdentifier: [str]}, preprocess_operations: [Callable[[dict], dict]]) -> {VerseIdentifier: [str]}:
+    """
+    Helper function to run preprocess operations on shared verses
+    """
+    for preprocess_operation in preprocess_operations:
+        shared_verses = preprocess_operation(shared_verses)
+
+    return shared_verses
+
+def create_datasets(bible_versions: [dict], training_fraction: float, shuffle: bool = True, write_files: bool = False, verbose: bool = True, preprocess_operations: [Callable[[dict], dict]] = []) -> {str: {str: [str]}}:
     """
     Creates dataset splits from specific bible versions, and returns the split.
     This should take ~1 second or so to execute. If this is too slow for you,
@@ -464,9 +502,21 @@ def create_datasets(bible_versions: [dict], training_fraction: float, shuffle: b
     shared_verses = time_function(f'Finding shared verses between {len(bible_versions)} versions...',
         lambda: get_shared_bible_verses(bible_versions), verbose)
 
-    if len(shared_verses) == 0:
+    raw_num_verses = len(shared_verses)
+
+    if raw_num_verses == 0:
         print(f'WARNING: There were no shared verses between the given versions.')
         return { 'training': [], 'validation': [], 'test': [] }
+
+    if len(preprocess_operations) > 0:
+        shared_verses = time_function(f'Run preprocess operations...',
+            lambda: run_preprocess_operations(shared_verses, preprocess_operations), verbose)
+
+        preprocess_num_verses = len(shared_verses)
+
+        if preprocess_num_verses == 0:
+            print(f'WARNING: No verses matched preprocessing criteria.')
+            return { 'training': [], 'validation': [], 'test': [] }
 
     training_verses, test_verses = time_function('Separate test verses...',
         lambda: filter_test_verses(shared_verses), verbose)
@@ -479,11 +529,13 @@ def create_datasets(bible_versions: [dict], training_fraction: float, shuffle: b
     zipped_verses = time_function(f'Zip together verses (shuffle = {shuffle})...',
         lambda: zip_split_verses(bible_versions, split_verses, shuffle), verbose)
 
-    if write_files:
-        time_function(f'Store datasets to files...',
+
+    write_files and time_function(f'Store datasets to files...',
             lambda: write_zipped_verses(zipped_verses), verbose)
 
-    verbose and print(f'\n# Training Verses:   {len(training_verses):7,d} ({len(training_verses) / len(shared_verses) * 100:.0f}%)\n# Validation Verses: {len(validation_verses):7,d} ({len(validation_verses) / len(shared_verses) * 100:.0f}%)\n# Test Verses:       {len(test_verses):7,d} ({len(test_verses) / len(shared_verses) * 100:.0f}%)')
+    verbose and len(preprocess_operations) > 0 and print(f'\n# verses before preprocessing: {raw_num_verses:7,d}\n# verses after  preprocessing: {preprocess_num_verses:7,d} ({preprocess_num_verses / raw_num_verses * 100:.0f}%)\n')
+
+    verbose and print(f'\n# training verses:   {len(training_verses):7,d} ({len(training_verses) / len(shared_verses) * 100:.0f}%)\n# validation verses: {len(validation_verses):7,d} ({len(validation_verses) / len(shared_verses) * 100:.0f}%)\n# test verses:       {len(test_verses):7,d} ({len(test_verses) / len(shared_verses) * 100:.0f}%)')
 
     return zipped_verses
 
