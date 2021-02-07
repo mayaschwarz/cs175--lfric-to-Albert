@@ -501,3 +501,18 @@ def load_datasets() ->  {str: {str: [str]}}:
             zipped_verses[dataset][table] = file.read().splitlines()
 
     return zipped_verses
+
+def get_unique_verses(version1: [str], version2: [str]) -> ((str,), (str,)):
+    """
+    Given verses of two datasets, returns list of verse pairs with identical verses removed.
+
+    Arguments:
+        version1 [str] -- list of bible verses for version1
+        version2 [str] -- list of bible verses for version2
+
+    Example return:
+        unique_verses(t_bbe, t_kjv)
+            ((But Jesus, answering, said, Put up with this, at least. And touching his ear, he made it well., ... ),
+            (And Jesus answered and said, Suffer ye thus far. And he touched his ear, and healed him., ...))
+    """
+    return zip(*((v1, v2) for v1, v2 in zip(version1, version2) if v1 != v2))
