@@ -502,24 +502,17 @@ def load_datasets() ->  {str: {str: [str]}}:
 
     return zipped_verses
 
-def get_unique_verses(ver1: [str], ver2: [str]) -> {str: {str: [str]}}:
+def get_unique_verses(version1: [str], version2: [str]) -> ((str,), (str,)):
     """
     Given verses of two datasets, returns list of verse pairs with identical verses removed.
 
     Arguments:
-        bible_versions {[dict]} -- list of bible version objects, as returned by get_bible_versions
-        training_fraction {float} -- fraction of non-test data to be allocated to training
-
-    Keyword Arguments:
-        shuffle {bool} -- [whether to shuffle the verses] (default: {True})
-        write_files {bool} -- [whether to write to files] (default: {False})
-        verbose {bool} -- [whether to print status and details] (default: {True})
+        version1 [str] -- list of bible verses for version1
+        version2 [str] -- list of bible verses for version2
 
     Example return:
         unique_verses(t_bbe, t_kjv)
-            [(But Jesus, answering, said, Put up with this, at least. And touching his ear, he made it well., And Jesus answered and said, Suffer ye thus far. And he touched his ear, and healed him.),
-            (I will give praise to the Lord who has been my guide; knowledge comes to me from my thoughts in the night., I will bless the LORD, who hath given me counsel: my reins also instruct me in the night seasons.),
-            (And it came about as he said: I was put back in my place, and the bread-maker was put to death by hanging., And it came to pass, as he interpreted to us, so it was; me he restored unto mine office, and him he hanged.),
-            ... ]
+            ((But Jesus, answering, said, Put up with this, at least. And touching his ear, he made it well., ... ),
+            (And Jesus answered and said, Suffer ye thus far. And he touched his ear, and healed him., ...))
     """
-    return [(v1, v2) for v1, v2 in zip(ver1, ver2) if v1 != v2]
+    return zip(*((v1, v2) for v1, v2 in zip(version1, version2) if v1 != v2))
