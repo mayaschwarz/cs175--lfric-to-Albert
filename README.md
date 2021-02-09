@@ -2,5 +2,5 @@
 
 ## Dependencies
 ```bash
-pip install texttable bs4
+pip install texttable bs4 contractions
 ```

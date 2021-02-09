@@ -7,6 +7,9 @@ from collections import defaultdict, namedtuple
 import random, shutil, re
 from typing import Callable
 
+# additional libraries (pip install ...)
+import contractions
+
 # CSV header names
 BOOK_KEY = 'b'
 CHAPTER_KEY = 'c'
@@ -441,6 +444,17 @@ def preprocess_filter_num_sentences(max_num_sentences: int = 1, min_num_sentence
     delim = re.compile(r'[.!?].')
 
     return lambda shared_verses: dict(filter(lambda verse: all((min_num_sentences <= len(re.split(delim, text)) <= max_num_sentences for text in verse[1])), shared_verses.items()))
+
+
+def preprocess_expand_contractions() -> Callable[[dict], dict]:
+    """
+    A preprocess function for create_datasets.
+    Expands contractions in verses, i.e.:
+    Why do you reason that it's because you have no bread? -> Why do you reason that it is because you have no bread?
+    Warning: This module (contractions) seems to be a simple regex, picking the most common contraction, so it's not perfect.
+    Warning 2: This module doesn't preserve case, if that is important for you.
+    """
+    return lambda shared_verses: dict(map(lambda verse: (verse[0], [contractions.fix(text) for text in verse[1]]), shared_verses.items()))
 
 def run_preprocess_operations(shared_verses: {VerseIdentifier: [str]}, preprocess_operations: [Callable[[dict], dict]]) -> {VerseIdentifier: [str]}:
     """
