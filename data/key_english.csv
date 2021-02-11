@@ -3,21 +3,21 @@ b,n,t,g,dataset
 2,Exodus,OT,1,train
 3,Leviticus,OT,1,train
 4,Numbers,OT,1,train
-5,Deuteronomy,OT,1,test
+5,Deuteronomy,OT,1,train
 6,Joshua,OT,2,train
-7,Judges,OT,2,train
+7,Judges,OT,2,test
 8,Ruth,OT,2,train
 9,1 Samuel,OT,2,train
 10,2 Samuel,OT,2,train
 11,1 Kings,OT,2,train
 12,2 Kings,OT,2,train
-13,1 Chronicles,OT,2,test
+13,1 Chronicles,OT,2,train
 14,2 Chronicles,OT,2,train
-15,Ezra,OT,2,test
-16,Nehemiah,OT,2,test
+15,Ezra,OT,2,train
+16,Nehemiah,OT,2,train
 17,Esther,OT,2,train
-18,Job,OT,3,test
-19,Psalms,OT,3,test
+18,Job,OT,3,train
+19,Psalms,OT,3,train
 20,Proverbs,OT,3,train
 21,Ecclesiastes,OT,3,test
 22,Song of Solomon,OT,3,train
@@ -41,26 +41,26 @@ b,n,t,g,dataset
 40,Matthew,NT,5,train
 41,Mark,NT,5,train
 42,Luke,NT,5,test
-43,John,NT,5,test
+43,John,NT,5,train
 44,Acts,NT,6,train
-45,Romans,NT,7,test
+45,Romans,NT,7,train
 46,1 Corinthians,NT,7,train
 47,2 Corinthians,NT,7,train
 48,Galatians,NT,7,train
 49,Ephesians,NT,7,train
 50,Philippians,NT,7,test
 51,Colossians,NT,7,test
-52,1 Thessalonians,NT,7,test
-53,2 Thessalonians,NT,7,test
+52,1 Thessalonians,NT,7,train
+53,2 Thessalonians,NT,7,train
 54,1 Timothy,NT,7,train
 55,2 Timothy,NT,7,test
 56,Titus,NT,7,train
 57,Philemon,NT,7,test
 58,Hebrews,NT,7,train
 59,James,NT,7,train
-60,1 Peter,NT,7,test
+60,1 Peter,NT,7,train
 61,2 Peter,NT,7,train
-62,1 John,NT,7,test
+62,1 John,NT,7,train
 63,2 John,NT,7,train
 64,3 John,NT,7,train
 65,Jude,NT,7,train
