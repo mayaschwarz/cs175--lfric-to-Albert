@@ -1,0 +1,7 @@
+requests~=2.25.1
+contractions~=0.0.48
+torch~=1.7.1
+texttable~=1.6.3
+beautifulsoup4~=4.9.3
+cltk~=1.0.0b3
+nltk~=3.5
