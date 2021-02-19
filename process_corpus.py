@@ -9,8 +9,7 @@ from bs4 import BeautifulSoup
 # Local Libraries
 from src.data_manager import get_bible_book_id_map
 
-from src.paths import WYCLIFFE_DIRECTORY_PATH, WYCLIFFE_KEY_PATH, WYCLIFFE_CSV_PATH
-from src.paths import AELFRIC_OLD_TESTAMENT_XML_PATH, AELFRIC_CSV_PATH
+from src.paths import *
 
 from src.data_manager import BOOK_KEY, CHAPTER_KEY, VERSE_KEY, TEXT_KEY, ID_KEY
 
@@ -101,7 +100,24 @@ def parse_aelfric_ot() -> None:
                     verse_id = int(cv[1])
                 i += 1
 
+def parse_homilies():
+    with open(DATA_RAW_PATH / "aelfric-homilies.txt", "r", encoding='utf-8') as f, \
+            open(MISC_TEXTS_PATH / 't_hom.csv', 'w', newline='', encoding='utf-8') as file:
+
+        writer = csv.writer(file)
+        writer.writerow(['id', 'text', 'translation'])
+        lines = f.readlines()
+        sentence_id = 1
+
+        # read lines 3 at a time
+        for i in range(0, len(lines), 3):
+            oe = lines[i].rstrip()
+            me = lines[i + 1].rstrip()
+            writer.writerow([sentence_id, oe, me])
+            sentence_id += 1
+
 
 if __name__ == '__main__':
-    parse_wycliffe()
+    # parse_wycliffe()
+    parse_homilies()
     # parse_aelfric_ot()
