@@ -21,7 +21,7 @@ NAME_KEY = 'n'
 DATASET_KEY = 'dataset'
 ID_KEY = 'id'
 
-VerseIdentifier = namedtuple('VerseIdentifier', ['book', 'chaper', 'verse'])
+VerseIdentifier = namedtuple('VerseIdentifier', ['book', 'chapter', 'verse'])
 
 # Other constants
 TESTAMENT_NAMES = { 'OT': 'Old Testament', 'NT': 'New Testament' }
@@ -179,10 +179,10 @@ def get_bible_verses(bible_version: dict) -> {VerseIdentifier: str}:
 
     Example return:
         {
-            VerseIdentifier(book=1, chaper=1, verse=1): 'In the beginning God created the heavens and the earth.',
-            VerseIdentifier(book=1, chaper=1, verse=2): 'And the earth was waste and void; and darkness was upon the face of the deep: and the Spirit of God moved upon the face of the waters.',
+            VerseIdentifier(book=1, chapter=1, verse=1): 'In the beginning God created the heavens and the earth.',
+            VerseIdentifier(book=1, chapter=1, verse=2): 'And the earth was waste and void; and darkness was upon the face of the deep: and the Spirit of God moved upon the face of the waters.',
             ...
-            VerseIdentifier(book=66, chaper=22, verse=21): 'The grace of the Lord Jesus be with the saints. Amen.'
+            VerseIdentifier(book=66, chapter=22, verse=21): 'The grace of the Lord Jesus be with the saints. Amen.'
         }
     """
     table_path = TABLE_DIRECTORY / TABLE_NAME_FORMAT.format(table = bible_version['table'])
@@ -192,11 +192,11 @@ def get_bible_verses(bible_version: dict) -> {VerseIdentifier: str}:
 
         headers = next(reader)
         book_index = headers.index(BOOK_KEY)
-        chaper_index = headers.index(CHAPTER_KEY)
+        chapter_index = headers.index(CHAPTER_KEY)
         verse_index = headers.index(VERSE_KEY)
         text_index = headers.index(TEXT_KEY)
 
-        return { VerseIdentifier(int(verse[book_index]), int(verse[chaper_index]), int(verse[verse_index])): verse[text_index] for verse in reader }
+        return { VerseIdentifier(int(verse[book_index]), int(verse[chapter_index]), int(verse[verse_index])): verse[text_index] for verse in reader }
 
 def get_shared_bible_verses(bible_versions: [dict]) -> {VerseIdentifier: [str]}:
     """
@@ -210,12 +210,12 @@ def get_shared_bible_verses(bible_versions: [dict]) -> {VerseIdentifier: [str]}:
 
     Example return:
         {
-            VerseIdentifier(book=1, chaper=1, verse=1): [
+            VerseIdentifier(book=1, chapter=1, verse=1): [
                 'In the beginning God created the heavens and the earth.',
                 'At the first God made the heaven and the earth.',
                 ...
             ],
-            VerseIdentifier(book=1, chaper=1, verse=2): [
+            VerseIdentifier(book=1, chapter=1, verse=2): [
                 'And the earth was waste and void; and darkness was upon the face of the deep: and the Spirit of God moved upon the face of the waters.',
                 'And the earth was waste and without form; and it was dark on the face of the deep: and the Spirit of God was moving on the face of the waters.',
                 ...
@@ -256,6 +256,7 @@ def get_books_contained_by_version(bible_version: dict) -> [int]:
 
         headers = next(reader)
         book_index = headers.index(BOOK_KEY)
+        print(next(reader))
 
         return sorted({int(verse[book_index]) for verse in reader})
 
@@ -285,7 +286,7 @@ def filter_test_verses(verses: {VerseIdentifier: [str]}) -> ({VerseIdentifier: [
     Example return:
         (
             {
-                VerseIdentifier(book=2, chaper=1, verse=1): [
+                VerseIdentifier(book=2, chapter=1, verse=1): [
                     'Now these are the names of the sons of Israel, who came into Egypt (every man and his household came with Jacob):',
                     'Now these are the names of the sons of Israel who came into Egypt; every man and his family came with Jacob.',
                     ...
@@ -293,7 +294,7 @@ def filter_test_verses(verses: {VerseIdentifier: [str]}) -> ({VerseIdentifier: [
                 ...
             },
             {
-                VerseIdentifier(book=1, chaper=1, verse=1): [
+                VerseIdentifier(book=1, chapter=1, verse=1): [
                     'In the beginning God created the heavens and the earth.',
                     'At the first God made the heaven and the earth.',
                     ...
