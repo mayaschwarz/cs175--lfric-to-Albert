@@ -256,7 +256,6 @@ def get_books_contained_by_version(bible_version: dict) -> [int]:
 
         headers = next(reader)
         book_index = headers.index(BOOK_KEY)
-        print(next(reader))
 
         return sorted({int(verse[book_index]) for verse in reader})
 
