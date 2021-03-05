@@ -187,7 +187,7 @@ def get_bible_verses(bible_version: dict) -> {VerseIdentifier: str}:
     """
     table_path = TABLE_DIRECTORY / TABLE_NAME_FORMAT.format(table = bible_version['table'])
 
-    with open(table_path, 'r', encoding='latin-1') as csvfile:
+    with open(table_path, 'r', encoding='utf-8') as csvfile:
         reader = csv.reader(csvfile)
 
         headers = next(reader)
