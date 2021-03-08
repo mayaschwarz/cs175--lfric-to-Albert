@@ -67,6 +67,7 @@ def _collect_helsinki() -> None:
         with open(HELSINKI_RAW_PATH / f'{idx}_{fn}.xml', 'w') as file:
             file.write(xml_doc.text)
 
+
 def _collect_me_prose() -> None:
     """
     Collects texts from Middle English Corpus and stores as txt files in 'data/raw/middle_english_prose'
@@ -99,6 +100,7 @@ def _collect_me_prose() -> None:
         content = html_doc.find('div', attrs={'id': 'doccontent'})
         with open(MIDDLE_ENGLISH_PROSE_VERSE_RAW_PATH / f'{idx}_{fn}.txt', 'w', encoding='utf-8') as file:
             file.write(content.text)
+
 
 def _collect_bible_study(url_path: str, csv_file: Path) -> None:
     """
@@ -168,6 +170,7 @@ def _collect_raw_corpus():
     # store raw-texts as tar files
     make_tarball(HELSINKI_RAW_TAR_PATH, HELSINKI_RAW_PATH)
     make_tarball(MIDDLE_ENGLISH_PROSE_VERSE_RAW_TAR_PATH, MIDDLE_ENGLISH_PROSE_VERSE_RAW_PATH)
+
 
 if __name__ == '__main__':
     _collect_raw_corpus()
