@@ -14,6 +14,11 @@ from src.paths import *
 from src.data_manager import BOOK_KEY, CHAPTER_KEY, VERSE_KEY, TEXT_KEY, ID_KEY
 
 def parse_wycliffe():
+    """
+    Parses text files in the wycbible folder (using the index file to locate books).
+    Transforms directory of book text files to t_wyc.csv format following the bible corpus
+    format and encodings.
+    """
     books = []
     id_ref = get_bible_book_id_map()
     # Get book id and fn of book
@@ -46,6 +51,10 @@ def parse_wycliffe():
 
 
 def parse_aelfric_ot() -> None:
+    """
+    Parses the XML file and retrieves verses within the XML. Must first be downloaded using the web_scrape.py scripts
+    to maintain path variables.
+    """
     id_ref = get_bible_book_id_map()
     with open(AELFRIC_OLD_TESTAMENT_XML_PATH, 'r', encoding='utf-8') as src, \
             open(AELFRIC_CSV_PATH, 'w',  newline='', encoding='utf-8') as dest:
@@ -101,6 +110,10 @@ def parse_aelfric_ot() -> None:
                 i += 1
 
 def parse_homilies():
+    """
+    Parses the formatted homilies text file into t_hom.csv format stored in misc_texts. See README in misc_texts for
+    formatting information.
+    """
     with open(DATA_RAW_PATH / "aelfric-homilies.txt", "r", encoding='utf-8') as f, \
             open(MISC_TEXTS_PATH / 't_hom.csv', 'w', newline='', encoding='utf-8') as file:
 
@@ -118,6 +131,6 @@ def parse_homilies():
 
 
 if __name__ == '__main__':
-    # parse_wycliffe()
+    parse_wycliffe()
     parse_homilies()
-    # parse_aelfric_ot()
+    parse_aelfric_ot()
