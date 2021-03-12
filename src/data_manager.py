@@ -187,7 +187,7 @@ def get_bible_verses(bible_version: dict) -> {VerseIdentifier: str}:
     """
     table_path = TABLE_DIRECTORY / TABLE_NAME_FORMAT.format(table = bible_version['table'])
 
-    with open(table_path, 'r', encoding='utf-8') as csvfile:
+    with open(table_path, 'r', encoding = 'utf-8') as csvfile:
         reader = csv.reader(csvfile)
 
         headers = next(reader)
@@ -197,6 +197,38 @@ def get_bible_verses(bible_version: dict) -> {VerseIdentifier: str}:
         text_index = headers.index(TEXT_KEY)
 
         return { VerseIdentifier(int(verse[book_index]), int(verse[chapter_index]), int(verse[verse_index])): verse[text_index] for verse in reader }
+
+def get_verse_breakdown(bible_version: dict) -> {int: int}:
+    """
+    Returns a breakdown of the number of verses per book of a given bible version.
+
+    Arguments:
+        bible_version {dict} -- the bible version object, as returned by get_bible_versions
+
+    Example return:
+        {
+            1: 1533,
+            2: 1213,
+            3: 859,
+            4: 1288,
+            5: 959,
+            ...
+        }
+    """
+    table_path = TABLE_DIRECTORY / TABLE_NAME_FORMAT.format(table = bible_version['table'])
+
+    with open(table_path, 'r', encoding = 'utf-8') as csvfile:
+        reader = csv.reader(csvfile)
+
+        headers = next(reader)
+        book_index = headers.index(BOOK_KEY)
+
+        breakdown = defaultdict(int)
+
+        for verse in reader:
+            breakdown[int(verse[book_index])] += 1
+
+        return breakdown
 
 def get_shared_bible_verses(bible_versions: [dict]) -> {VerseIdentifier: [str]}:
     """
@@ -455,6 +487,24 @@ def preprocess_expand_contractions() -> Callable[[dict], dict]:
     Warning 2: This module doesn't preserve case, if that is important for you.
     """
     return lambda shared_verses: dict(map(lambda verse: (verse[0], [contractions.fix(text) for text in verse[1]]), shared_verses.items()))
+
+def preprocess_remove_punctuation(preserve_periods: bool = True) -> Callable[[dict], dict]:
+    """
+    A preprocess function for create_datasets.
+    Removes punctuation for each verse.
+
+    Keyword Arguments:
+        preserve_periods {bool} -- whether to preserve ending punctuation (.?!) (default: {True})
+    """
+    remove_symbols = r"[\";\,\:\[\]\(\)&‘'" + ("" if preserve_periods else r"\.!?") + ']'
+    return lambda shared_verses: dict(map(lambda verse: (verse[0], [re.sub(remove_symbols, '', text) for text in verse[1]]), shared_verses.items()))
+
+def preprocess_lowercase() -> Callable[[dict], dict]:
+    """
+    A preprocess function for create_datasets.
+    Converts each verse to lowercase characters only.
+    """
+    return lambda shared_verses: dict(map(lambda verse: (verse[0], [text.lower() for text in verse[1]]), shared_verses.items()))
 
 def run_preprocess_operations(shared_verses: {VerseIdentifier: [str]}, preprocess_operations: [Callable[[dict], dict]]) -> {VerseIdentifier: [str]}:
     """

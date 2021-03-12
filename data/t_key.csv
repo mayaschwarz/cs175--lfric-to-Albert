@@ -6,7 +6,7 @@ id,table,abbreviation,language,version,info_text,info_url,publisher,copyright,co
 5,t_wbt,WBT,english,Webster's Bible,,http://en.wikipedia.org/wiki/Webster%27s_Revision,,Public Domain,
 6,t_web,WEB,english,World English Bible,,http://en.wikipedia.org/wiki/World_English_Bible,,Public Domain,
 7,t_ylt,YLT,english,Young's Literal Translation,,http://en.wikipedia.org/wiki/Young%27s_Literal_Translation,,Public Domain,
-8,t_wsg,WSG,old english, West-Saxon Gospels (1175),,https://studybible.info/version/WestSaxon1175/,,Public Domain,
+8,t_wsg,WSG,old english,West-Saxon Gospels (1175),,https://studybible.info/version/WestSaxon1175/,,Public Domain,
 9,t_wyc,WYC,middle english,John Wycliffe's Translation,,http://wesley.nnu.edu/fileadmin/imported_site/biblical_studies/wycliffe/,,Public Domain,
 10,t_alf,ALF,old english,Aelfric's Old Testament,,https://helsinkicorpus.arts.gla.ac.uk/browse.py?fs=100&format=html&toc=author&pb=true&params=false&pln=true&highlight=&text=aelfold,,Public Domain,
 11,t_alf_wsg,ALF_WSG,old english,Aelfric's Old Testament + West-Saxon Gospels,,,,Public Domain,

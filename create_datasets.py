@@ -3,6 +3,9 @@ from src.data_manager import create_datasets, get_bible_versions
 from src.utils import prompt_boolean, prompt_int
 
 def _prompt_create_datasets():
+    """
+    Prompts the user to create datasets from the command line.
+    """
     if DATA_SPLIT_PATH.exists() and not prompt_boolean('Are you sure you want to overwrite your existing dataset split directory?', default = False):
         print('Aborting.')
         exit(0)

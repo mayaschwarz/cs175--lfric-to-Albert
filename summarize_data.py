@@ -1,8 +1,10 @@
-from src.data_manager import get_bible_versions, get_versions_missing_books, get_bible_book_genres, get_bible_books
+from src.data_manager import get_bible_versions, get_versions_missing_books, get_bible_book_genres, get_bible_books, get_verse_breakdown
 from src.data_manager import TESTAMENT_NAMES
 
 # Additional libraries (pip install ...)
 import texttable
+
+DEFAULT_BIBLE_TABLE = 't_kjv'
 
 def _print_table(title: str, headers: [str], rows: [int or str], align: [str] or None = None):
     """
@@ -24,7 +26,11 @@ def _print_table(title: str, headers: [str], rows: [int or str], align: [str] or
     print(title)
     print(table.draw())
 
-def _print_version_table():
+def print_version_table():
+    """
+    Prints a table summarizing the different versions of the Bible and their
+    available books.
+    """
     bible_versions = get_bible_versions()
     missing_books = get_versions_missing_books(bible_versions)
 
@@ -36,47 +42,74 @@ def _print_version_table():
     ) for version in bible_versions]
 
     _print_table(
-        title = "Bible Version Table",
+        title = 'Bible Version Table',
         headers = ['id', 'abbr', 'version', 'missing books'],
         rows = rows
     )
 
-def _print_genre_table():
+def print_genre_table(table: str = DEFAULT_BIBLE_TABLE):
+    """
+    Prints a breakdown of the different bible genres for a given version table name,
+    i.e., the number of books and verses each genre has.
+
+    Keyword Arguments:
+        table {str} -- the bible version table name (default: {DEFAULT_BIBLE_TABLE})
+    """
+    books = get_bible_books()
     genres = get_bible_book_genres()
-    book_genres = [book['genre_id'] for book in get_bible_books().values()]
+    book_genres = [book['genre_id'] for book in books.values()]
+    version = next(filter(lambda v: v['table'] == table, get_bible_versions()))
+    verse_breakdown = get_verse_breakdown(version)
 
     rows = [(
         genre_id,
         genre,
-        book_genres.count(genre_id)
+        book_genres.count(genre_id),
+        f"{sum(dict(filter(lambda kv: books[kv[0]]['genre_id'] == genre_id, verse_breakdown.items())).values()):,d}"
     ) for (genre_id, genre) in sorted(genres.items())]
 
     _print_table(
-        title = "Bible Genre Table",
-        headers = ['id', 'name', '# books'],
-        rows = rows
+        title = f"Bible Genre Table – {version['version']}",
+        headers = ['id', 'name', '# books', '# verses'],
+        rows = rows,
+        align = ['l', 'l', 'r', 'r']
     )
 
-def _print_testament_table():
+def print_testament_table(table: str = DEFAULT_BIBLE_TABLE):
+    """
+    Prints a breakdown of the different bible testaments for a given version table name,
+    i.e., the number of books and verses each testament type (OT vs. NT) has.
+
+    Keyword Arguments:
+        table {str} -- the bible version table name (default: {DEFAULT_BIBLE_TABLE})
+    """
     books = get_bible_books()
     testament_labels = [book['testament'] for book in books.values()]
+    version = next(filter(lambda v: v['table'] == table, get_bible_versions()))
+    verse_breakdown = get_verse_breakdown(version)
 
     rows = [(
         testament_label,
         TESTAMENT_NAMES[testament_label],
-        testament_labels.count(testament_label)
-    ) for testament_label in sorted(set(testament_labels))]
+        testament_labels.count(testament_label),
+        f"{sum(dict(filter(lambda kv: books[kv[0]]['testament'] == testament_label, verse_breakdown.items())).values()):,d}"
+    ) for testament_label in sorted(set(testament_labels), reverse = True)]
 
     _print_table(
-        title = "Bible Testament Table",
-        headers = ['label', 'name', '# books'],
-        rows = rows
+        title = f"Bible Testament Table – {version['version']}",
+        headers = ['label', 'name', '# books', '# verses'],
+        rows = rows,
+        align = ['l', 'l', 'r', 'r']
     )
 
 def _get_genre_dataset_split(genre_id: int, dataset: str) -> int:
     return len(list(filter(lambda book: book['genre_id'] == genre_id and book['dataset'] == dataset, get_bible_books().values())))
 
-def _print_genre_data_split_table():
+def print_genre_data_split_table():
+    """
+    Prints a breakdown of the different bible genres training / test split, specifically
+    the number of books for each.
+    """
     genres = get_bible_book_genres()
 
     rows = [(
@@ -85,7 +118,7 @@ def _print_genre_data_split_table():
     ) for (genre_id, genre) in sorted(genres.items())]
 
     _print_table(
-        title = "Bible Genre Data Split Table",
+        title = 'Bible Genre Data Split Table',
         headers = ['genre', 'train / test split'],
         rows = rows,
         align = ['l', 'c']
@@ -94,32 +127,36 @@ def _print_genre_data_split_table():
 def _get_testament_dataset_split(testament: str, dataset: str) -> int:
     return len(list(filter(lambda book: book['testament'] == testament and book['dataset'] == dataset, get_bible_books().values())))
 
-def _print_testament_data_split_table():
+def print_testament_data_split_table():
+    """
+    Prints a breakdown of the different bible testament training / test split, specifically
+    the number of books for each.
+    """
     books = get_bible_books()
     testament_labels = [book['testament'] for book in books.values()]
 
     rows = [(
         TESTAMENT_NAMES[testament_label],
         f"{_get_testament_dataset_split(testament_label, 'train')} / {_get_testament_dataset_split(testament_label, 'test')}"
-    ) for testament_label in sorted(set(testament_labels))]
+    ) for testament_label in sorted(set(testament_labels), reverse = True)]
 
     _print_table(
-        title = "Bible Testament Data Split Table",
+        title = 'Bible Testament Data Split Table',
         headers = ['testament', 'train / test split'],
         rows = rows,
         align = ['l', 'c']
     )
 
 def _print_summary_tables():
-    _print_version_table()
+    print_version_table()
     print()
-    _print_genre_table()
+    print_genre_table()
     print()
-    _print_testament_table()
+    print_testament_table()
     print()
-    _print_genre_data_split_table()
+    print_genre_data_split_table()
     print()
-    _print_testament_data_split_table()
+    print_testament_data_split_table()
     print()
 
 if __name__ == '__main__':
