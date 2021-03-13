@@ -93,7 +93,6 @@ def print_testament_table(table: str = DEFAULT_BIBLE_TABLE):
     book_mapping = get_book_mapping(version)
     books = dict(filter(lambda kv: kv[0] in book_mapping, books.items()))
     testament_labels = [book['testament'] for (book_id, book) in books.items()]
-    print(book_mapping)
 
     rows = [(
         testament_label,
