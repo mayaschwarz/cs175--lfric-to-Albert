@@ -1,7 +1,10 @@
 requests~=2.25.1
 contractions~=0.0.48
+cltk~=0.1.121
+datasets~=1.4.1
+OpenNMT-py~=2.0.1
+pyonmttok==1.24.0
 torch~=1.7.1
 texttable~=1.6.3
 beautifulsoup4~=4.9.3
-cltk~=1.0.0b3
 nltk~=3.5
