@@ -1,4 +1,4 @@
-from src.data_manager import get_bible_versions, get_versions_missing_books, get_bible_book_genres, get_bible_books, get_verse_breakdown
+from src.data_manager import get_bible_versions, get_versions_missing_books, get_bible_book_genres, get_bible_books, get_book_mapping
 from src.data_manager import TESTAMENT_NAMES
 
 # Additional libraries (pip install ...)
@@ -47,6 +47,9 @@ def print_version_table():
         rows = rows
     )
 
+def _get_num_verses_in_book(book_mapping_book: {int: {int: str}}) -> int:
+    return sum(len(chapter) for chapter in book_mapping_book.values())
+
 def print_genre_table(table: str = DEFAULT_BIBLE_TABLE):
     """
     Prints a breakdown of the different bible genres for a given version table name,
@@ -57,15 +60,16 @@ def print_genre_table(table: str = DEFAULT_BIBLE_TABLE):
     """
     books = get_bible_books()
     genres = get_bible_book_genres()
-    book_genres = [book['genre_id'] for book in books.values()]
     version = next(filter(lambda v: v['table'] == table, get_bible_versions()))
-    verse_breakdown = get_verse_breakdown(version)
+    book_mapping = get_book_mapping(version)
+    books = dict(filter(lambda kv: kv[0] in book_mapping, books.items()))
+    book_genres = [book['genre_id'] for (book_id, book) in books.items()]
 
     rows = [(
         genre_id,
         genre,
         book_genres.count(genre_id),
-        f"{sum(dict(filter(lambda kv: books[kv[0]]['genre_id'] == genre_id, verse_breakdown.items())).values()):,d}"
+        f"{sum((_get_num_verses_in_book(book_mapping[book_id]) for (book_id, book) in books.items() if book['genre_id'] == genre_id)):,d}"
     ) for (genre_id, genre) in sorted(genres.items())]
 
     _print_table(
@@ -84,16 +88,19 @@ def print_testament_table(table: str = DEFAULT_BIBLE_TABLE):
         table {str} -- the bible version table name (default: {DEFAULT_BIBLE_TABLE})
     """
     books = get_bible_books()
-    testament_labels = [book['testament'] for book in books.values()]
+    all_testament_labels = {book['testament'] for book in books.values()}
     version = next(filter(lambda v: v['table'] == table, get_bible_versions()))
-    verse_breakdown = get_verse_breakdown(version)
+    book_mapping = get_book_mapping(version)
+    books = dict(filter(lambda kv: kv[0] in book_mapping, books.items()))
+    testament_labels = [book['testament'] for (book_id, book) in books.items()]
+    print(book_mapping)
 
     rows = [(
         testament_label,
         TESTAMENT_NAMES[testament_label],
         testament_labels.count(testament_label),
-        f"{sum(dict(filter(lambda kv: books[kv[0]]['testament'] == testament_label, verse_breakdown.items())).values()):,d}"
-    ) for testament_label in sorted(set(testament_labels), reverse = True)]
+        f"{sum((_get_num_verses_in_book(book_mapping[book_id]) for (book_id, book) in books.items() if book['testament'] == testament_label)):,d}"
+    ) for testament_label in sorted(all_testament_labels, reverse = True)]
 
     _print_table(
         title = f"Bible Testament Table – {version['version']}",

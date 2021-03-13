@@ -198,20 +198,24 @@ def get_bible_verses(bible_version: dict) -> {VerseIdentifier: str}:
 
         return { VerseIdentifier(int(verse[book_index]), int(verse[chapter_index]), int(verse[verse_index])): verse[text_index] for verse in reader }
 
-def get_verse_breakdown(bible_version: dict) -> {int: int}:
+def get_book_mapping(bible_version: dict) -> {int: {int: {int: str}}}:
     """
-    Returns a breakdown of the number of verses per book of a given bible version.
+    Returns a book mapping of a given bible version. A specific verse text can be selected by using
+    book_mapping[book_id][chapter_id][verse_id].
 
     Arguments:
         bible_version {dict} -- the bible version object, as returned by get_bible_versions
 
     Example return:
         {
-            1: 1533,
-            2: 1213,
-            3: 859,
-            4: 1288,
-            5: 959,
+            1: { # book id
+                1: { # chapter id
+                    1: 'In the beginning God created the heaven and the earth.',
+                    2: 'And the earth was without form, and void; ...',
+                    ...
+                },
+                ...
+            },
             ...
         }
     """
@@ -222,13 +226,16 @@ def get_verse_breakdown(bible_version: dict) -> {int: int}:
 
         headers = next(reader)
         book_index = headers.index(BOOK_KEY)
+        chapter_index = headers.index(CHAPTER_KEY)
+        verse_index = headers.index(VERSE_KEY)
+        text_index = headers.index(TEXT_KEY)
 
-        breakdown = defaultdict(int)
+        book_mapping = defaultdict(lambda: defaultdict(dict))
 
         for verse in reader:
-            breakdown[int(verse[book_index])] += 1
+            book_mapping[int(verse[book_index])][int(verse[chapter_index])][int(verse[verse_index])] = verse[text_index]
 
-        return breakdown
+        return book_mapping
 
 def get_shared_bible_verses(bible_versions: [dict]) -> {VerseIdentifier: [str]}:
     """
