@@ -15,7 +15,7 @@ Table of Contents
 
 ## Setup
 Requires:
-- Python >= 3.8
+- Python >= 3.7
 
 Install package dependencies:
 ```bash
