@@ -1,3 +1,4 @@
+
 # CS 175 - Ælfric to Albert
 
 Ælfric to Albert is a NLP project that attempts to translate between Modern, Middle, and Old
@@ -22,8 +23,8 @@ Table of Contents
 ## Project Structure
 
     .
-    ├── data/                 # corpora for training and testing models
-    ├── src/                  # project source code
+    ├── data/                   # corpora for training and testing models
+    ├── src/                    # project source code
         ├── data_manager.py     # functions to generating train/test split and transformations
         ├── paths.py            # global file paths for data
         └── utils.py            # utility functions
@@ -32,6 +33,8 @@ Table of Contents
     ├── Demo.ipynb              # Jupyter Notebook showcasing trained models
     ├── modifiedPytorch.ipynb   # word-level LSTM encoder decoder
     ├── EncDecRNN.ipynb         # Training notebook for encoder decoder RNN model
+    ├── HuggingfaceBartTransformer.ipynb
+    │                           # Training notebook for transformer model
     ├── process_corpus.py       # formating raw data into machine-readable format
     ├── requirements.txt        # project dependencies
     ├── summarize_data.py       # summarizes data using texttable
@@ -46,6 +49,12 @@ For a very quick summary of the data, run:
 ```bash
 python3 summarize_data.py
 ```
+
+Our data management code can be seen in the [`src/`][src] directory.
+
+Our final training notebooks for the Encoder-Decoder RNN model and for the transformer model can be found at [`EncDecRNN.ipynb`][encdec] and [`HuggingfaceBartTransformer.ipynb`][transformer], respectively. While the transformer achieves better results for Modern-to-Modern English translations, the Encoder-Decoder model is also able to translate from and to Old and Middle English.
+
+For legacy purposes, we also include [`character_lstm.py`][character], which uses a character level model instead of a word or word segment tokenized model. This model performs the worst by far.
 
 ## Setup
 Requires:
@@ -78,3 +87,7 @@ For local development on Windows, we recommend *Windows Subsystem for Linux* ([h
 
 [demo]:Demo.ipynb "project showcase notebook"
 [data]:data/ "data directory"
+[src]:src/ "code source directory"
+[encdec]:EncDecRNN.ipynb "encoder-decoder RNN training notebook"
+[transformer]:HuggingfaceBartTransformer.ipynb "transformer training notebook"
+[character]:character_lstm.py "character level LSTM training notebook"
