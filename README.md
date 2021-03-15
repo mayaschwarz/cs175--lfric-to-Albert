@@ -1,4 +1,3 @@
-
 # CS 175 - Ælfric to Albert
 
 Ælfric to Albert is a NLP project that attempts to translate between Modern, Middle, and Old
@@ -21,7 +20,6 @@ Table of Contents
 <!-- /MarkdownTOC -->
 
 ## Project Structure
-Project directory structure.
 
     .
     ├── data/                 # corpora for training and testing models
